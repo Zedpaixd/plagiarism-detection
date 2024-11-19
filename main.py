@@ -14,4 +14,5 @@ if __name__ == '__main__':
     # fileprops.copy_paste_plagiarism()
 
     filesim = FileSimilarity(os.path.join(os.getcwd(), 'submissions'))
-    filesim.find_plagiarism(42)
+    filesim.ignore_file('NameOfFile.YouWantToIgnore')
+    filesim.find_plagiarism(1)

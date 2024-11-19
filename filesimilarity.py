@@ -10,6 +10,10 @@ class FileSimilarity:
         self.similar_pairs = []
         self.groups = []
         self.file_sets = {}
+        self.ignored_files = set()
+
+    def ignore_file(self, name):
+        self.ignored_files.add(name)
 
     def get_subfolders(self):
         # Get all subfolders in the main directory
@@ -52,7 +56,7 @@ class FileSimilarity:
         return similarity
 
     def compare_files(self, delta):
-        # Compare files from different folders and record similar pairs
+        # Compare files from different folders and record similar pairs, skipping ignored files
         file_sets = {}  # Cache file contents to avoid re-reading
         similar_pairs = []
         all_files = []
@@ -61,11 +65,15 @@ class FileSimilarity:
         total_files = len(all_files)
         for idx1 in range(total_files):
             file1 = all_files[idx1]
+            if os.path.basename(file1) in self.ignored_files:
+                continue
             if file1 not in file_sets:
                 file_sets[file1] = self.file_to_set(file1)
             set1 = file_sets[file1]
             for idx2 in range(idx1 + 1, total_files):
                 file2 = all_files[idx2]
+                if os.path.basename(file2) in self.ignored_files:
+                    continue
                 if file2 not in file_sets:
                     file_sets[file2] = self.file_to_set(file2)
                 set2 = file_sets[file2]
